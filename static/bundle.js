@@ -189,6 +189,8 @@ var structure = immstruct('reactions', data);
 var PhotoBooth = require('./components/photobooth');
 var setPropsMixin = require('omniscient-mixins/mixins/swapProps');
 
+var events = new EventEmitter();
+
 var members = {
   handleSubmit: function (e) {
     e.preventDefault();
@@ -197,16 +199,16 @@ var members = {
 
   handleClose: function () {
     this.setProps({ isInAddMode: false });
+  },
+
+  componentDidMount: function () {
+    events.on('close', this.handleClose);
   }
 };
 
 var mixins = [members, setPropsMixin];
 var ReactionBox = component(mixins, function (cursor) {
   var hiddenClass = cursor.get('isInAddMode') ? 'hidden' : '';
-
-  var events = new EventEmitter();
-  events.on('close', this.handleClose);
-
   var sharedState = { isInAddMode: cursor.get('isInAddMode') };
 
   return (
